@@ -116,12 +116,7 @@ class Game
     {
         $data = [
             $this->computer->getAscii(),
-            [
-                'Player' => 'Alejandro',
-                'Victory' => $this->player->stats()->getVictories(),
-                'Draw' => $this->player->stats()->getDraws(),
-                'Defeat' => $this->player->stats()->getDefeats(),
-            ],
+            $this->player->getAscii(),
         ];
         $renderer = new ArrayToTextTable($data);
         return $renderer->getTable();

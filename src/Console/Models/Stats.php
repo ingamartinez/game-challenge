@@ -13,9 +13,9 @@ class Stats
         $this->defeat = 0;
     }
 
-    public function getVictories(): string
+    public function getVictories(): int
     {
-        return ''.$this->victory;
+        return $this->victory;
     }
 
     public function getDefeats(): int

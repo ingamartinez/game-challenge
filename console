@@ -5,7 +5,7 @@ use Uniqoders\Game\Console\GameCommand;
 
 require_once('vendor/autoload.php');
 
-$app = new Symfony\Component\Console\Application('Rock, Paper, Scissors', '1.0.0');
+$app = new Symfony\Component\Console\Application('Rock, Paper, Scissors, Lizard, Spock', '1.0.0');
 $app->add(new GameCommand());
 
 $app->run();

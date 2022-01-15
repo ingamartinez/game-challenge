@@ -1,5 +1,5 @@
 # Console game Rock, Paper, Scissors, Lizard, Spock 
-This is a challenge game when the player will play the famous Rock, Paper, Scissors the Big Bang Theory version.
+This is a challenge game wehere the player will play the famous Rock, Paper, Scissors but with the twist presented in the big bang theory show including 2 new options: Spock and Lizzard.
 
 Install dependencies:
 ```
@@ -46,13 +46,13 @@ Options:
 [ROCK]      crushes     [SCISSORS]
 ```
 ## Game Explanation
-<img src="https://user-images.githubusercontent.com/17319616/149609552-004da205-84f1-4830-9c2a-880cfc982201.png" width="600" height="auto">
+<img src="https://user-images.githubusercontent.com/17319616/149631761-0c39f55a-e659-4da4-ad73-b57d5f5f85c6.png" width="600" height="auto">
 
-Keeping in mind the previous image, a pattern can be seen: Every one element you win and every two elements you lose.
+As seen in the previous image, a pattern can be observed: per every one element you will win and every two you’ve lose
 
-Example: If we take [ROCK], the next element he would beat is [LIZZARD], but he would lose against [SPOCK].
+Choosing an option (eg ROCK) the next element he would beat is [LIZZARD], but he would lose against [SPOCK].
 
-Having found this pattern, the designed solution was to find how many positions there are of difference between what the player chose and what the machine chose.
+Having found this pattern, the designed solution was to determinate how many positions are between the player and computer elections.
 
 This is achieved using the arithmetic modulus formula, which would be represented by taking the previous example:
 ```

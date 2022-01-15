@@ -1,5 +1,5 @@
 # Console game Rock, Paper, Scissors, Lizard, Spock 
-This is a challenge game wehere the player will play the famous Rock, Paper, Scissors but with the twist presented in the big bang theory show including 2 new options: Spock and Lizzard.
+This is a challenge game wehere the player will play the well known Rock, Paper, Scissors but with the twist presented in the big bang theory show including 2 new options: Spock and Lizzard.
 
 Install dependencies:
 ```
@@ -48,7 +48,7 @@ Options:
 ## Game Explanation
 <img src="https://user-images.githubusercontent.com/17319616/149631761-0c39f55a-e659-4da4-ad73-b57d5f5f85c6.png" width="600" height="auto">
 
-As seen in the previous image, a pattern can be observed: per every one element you will win and every two you’ve lose
+As seen in the previous image, a pattern can be observed: moving forward positions in an odd number you loose, and moving forward in an even number you win.
 
 Choosing an option (eg ROCK) the next element he would beat is [LIZZARD], but he would lose against [SPOCK].
 
@@ -58,13 +58,13 @@ This is achieved using the arithmetic modulus formula, which would be represente
 ```
 (2-3)mod5=4` y `(2-4)mod5=3
 ```
-This gives us another pattern and that is that when the result gives an even number you win and when it gives an odd number you lose.
+This gives us another pattern: when the result is an even number you win and when it is an odd number you lose.
 
 Since there is no arithmetic modulus function in PHP, it would be represented as follows:
 ```
 (human_option - computer_option + total_options) % total_options
 ```
-In this way, it will always give us how many positions there are, even if we take [SCISSORS] vs [SPOCK] which would be:
+In this way, the formula will give us how many positions there are, even if we take [SCISSORS] vs [SPOCK] `[0-4]` which would be:
 ```
 (0-4+5)%5 = 1 // [SPOCK] smashes [SCISSORS]
 ```

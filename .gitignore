@@ -127,17 +127,7 @@ fabric.properties
 .phpunit.result.cache
 .phpunit.cache
 
-# PHPUnit
-/app/phpunit.xml
-/phpunit.xml
-
 # Build data
 /build/
 
 # End of https://www.toptal.com/developers/gitignore/api/phpstorm,composer,phpunit
-/.idea/vcs.xml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/php.xml
-/.idea/.gitignore
-/.idea/phpunit.xml

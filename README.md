@@ -50,13 +50,14 @@ Options:
 
 As seen in the previous image, a pattern can be observed: moving forward positions in an odd number you loose, and moving forward in an even number you win.
 
-Choosing an option (eg ROCK) the next element he would beat is [LIZZARD], but he would lose against [SPOCK].
+Choosing an option (eg ROCK) this one would win against [LIZZARD], but he would lose against [SPOCK].
 
 Having found this pattern, the designed solution was to determinate how many positions are between the player and computer elections.
 
 This is achieved using the arithmetic modulus formula, which would be represented by taking the previous example:
 ```
-(2-3)mod5=4` y `(2-4)mod5=3
+(2-3) mod5 = 4 // [ROCK] vs [LIZZARD]
+(2-4) mod5 = 3 // [LIZZARD] vs [SPOCK]
 ```
 This gives us another pattern: when the result is an even number you win and when it is an odd number you lose.
 
@@ -66,5 +67,5 @@ Since there is no arithmetic modulus function in PHP, it would be represented as
 ```
 In this way, the formula will give us how many positions there are, even if we take [SCISSORS] vs [SPOCK] `[0-4]` which would be:
 ```
-(0-4+5)%5 = 1 // [SPOCK] smashes [SCISSORS]
+(0-4+5) % 5 = 1 // [SPOCK] smashes [SCISSORS]
 ```

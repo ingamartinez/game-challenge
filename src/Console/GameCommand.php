@@ -54,7 +54,7 @@ class GameCommand extends Command
         $this->input = $input;
         $this->output = $output;
         $this->start();
-        return 0;
+        return Command::SUCCESS;
     }
 
     public function start() {

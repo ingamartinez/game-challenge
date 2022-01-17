@@ -26,13 +26,14 @@ class Game
      * It calculates the winner of the round
      *
      * @param string $weapon
+     * @param string|null $computerWeapon
      * @return string[]
      */
-    public function calculateWinner(string $weapon): array{
+    public function calculateWinner(string $weapon, string $computerWeapon=null): array{
         $optionHumanText = $weapon;
         $optionHumanValue = $this->options[$optionHumanText];
 
-        $optionComputerText = array_rand($this->options);
+        $optionComputerText = $computerWeapon ?? array_rand($this->options);
         $optionComputerValue = $this->options[$optionComputerText];
         $result = ($optionHumanValue - $optionComputerValue + count($this->options)) % count($this->options);
 
@@ -97,4 +98,54 @@ class Game
         }
         return false;
     }
+
+    /**
+     * @return Player
+     */
+    public function getPlayer(): Player
+    {
+        return $this->player;
+    }
+
+    /**
+     * @return Player
+     */
+    public function getComputer(): Player
+    {
+        return $this->computer;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxRounds(): int
+    {
+        return $this->max_rounds;
+    }
+
+    /**
+     * @return int
+     */
+    public function getActualRounds(): int
+    {
+        return $this->actual_rounds;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinVictories(): int
+    {
+        return $this->min_victories;
+    }
+
+
 }

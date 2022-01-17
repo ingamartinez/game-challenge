@@ -2,11 +2,6 @@
 
 namespace Uniqoders\Game\Console;
 
-use Closure;
-use MathieuViossat\Util\ArrayToTextTable;
-use PhpSchool\CliMenu\Builder\CliMenuBuilder;
-use PhpSchool\CliMenu\CliMenu;
-use PhpSchool\CliMenu\Exception\InvalidTerminalException;
 use Uniqoders\Game\Console\Models\Player;
 
 class Game
@@ -17,21 +12,6 @@ class Game
     protected int $max_rounds;
     protected int $actual_rounds;
     protected int $min_victories;
-    protected string $artCover = "               .
-              .:.
-             .:::.
-            .:::::.
-        ***.:::::::.***
-   *******.:::::::::.*******       
- ********.:::::::::::.********     
-********.:::::::::::::.********    
-*******.::::::'***`::::.*******    
-******.::::'*********`::.******    
- ****.:::'*************`:.****
-   *.::'*****************`.*
-   .:'  ***************    .
-  .
-";
 
     public function __construct(string $player_name, int $min_victories = 3,  int $max_rounds = 5) {
         $this->player = new Player($player_name);
@@ -42,167 +22,79 @@ class Game
     }
 
     /**
-     * Method that start the game
-     *
-     * @return void
-     * @throws InvalidTerminalException
-     */
-    public function start() {
-        $this->createGameCover();
-    }
-
-    /**
-     * Show an ASCII image as cover
-     *
-     * @return void
-     * @throws InvalidTerminalException
-     */
-    protected function createGameCover()
-    {
-        (new CliMenuBuilder)
-            ->setTitle('Rock Paper Scissors Lizard Spock - Game')
-            ->addStaticItem('')
-            ->addAsciiArt($this->artCover,'center')
-            ->addItem('Start Game', Closure::fromCallable([$this, 'createGame']))
-            ->setBorder(1, 2, 'yellow')
-            ->setPadding(2, 4)
-            ->setMarginAuto()
-            ->disableDefaultItems()
-            ->build()
-        ->open();
-    }
-
-    /**
-     * Create the menu for the game options
-     *
-     * @param CliMenu $menuCover
-     * @return void
-     * @throws InvalidTerminalException
-     */
-    protected function createGame(CliMenu $menuCover) {
-        $menuCover->close();
-
-        (new CliMenuBuilder)
-            ->setTitle('Rock, Paper, Scissors, Lizard, Spock Game')
-            ->addStaticItem('Please choose a option:')
-            ->addLineBreak()
-            ->addItem('Rock', Closure::fromCallable([$this, 'calculateWinner']))
-            ->addItem('Paper', Closure::fromCallable([$this, 'calculateWinner']))
-            ->addItem('Scissors', Closure::fromCallable([$this, 'calculateWinner']))
-            ->addItem('Lizard', Closure::fromCallable([$this, 'calculateWinner']))
-            ->addItem('Spock', Closure::fromCallable([$this, 'calculateWinner']))
-            ->addLineBreak('-')
-            ->setBorder(1, 2, 'yellow')
-            ->setPadding(2, 4)
-            ->setMarginAuto()
-            ->build()
-        ->open();
-    }
-
-    /**
      * Method called each time a player select an option from the menu
      * It calculates the winner of the round
      *
-     * @param CliMenu $menu
-     * @return void
-     * @throws InvalidTerminalException
+     * @param string $weapon
+     * @return string[]
      */
-    protected function calculateWinner(CliMenu $menu){
-        $optionHumanText = $menu->getSelectedItem()->getText();
+    public function calculateWinner(string $weapon): array{
+        $optionHumanText = $weapon;
         $optionHumanValue = $this->options[$optionHumanText];
 
         $optionComputerText = array_rand($this->options);
         $optionComputerValue = $this->options[$optionComputerText];
-        $win = ($optionHumanValue - $optionComputerValue + count($this->options)) % count($this->options);
+        $result = ($optionHumanValue - $optionComputerValue + count($this->options)) % count($this->options);
 
-        $this->printRoundWinner($menu, "You have just selected: [$optionHumanText]", 'cyan');
-        $this->printRoundWinner($menu, "Computer has just selected: [$optionComputerText]", 'cyan');
+        $response = [
+            'human_choice' => "You have just selected: [$optionHumanText]",
+            'computer_choice' => "Computer has just selected: [$optionComputerText]"
+        ];
 
-        if ($win === 0) {
-            $this->printRoundWinner($menu, "Draw!", 'yellow');
+        if ($result === 0) {
+            $response['winner'] = "Draw!";
             $this->player->draw();
             $this->computer->draw();
-        }elseif ($win%2 === 0) {
-            $this->printRoundWinner($menu, $this->player->getName() . " [$optionHumanText] wins!", 'green');
+        }elseif ($result%2 === 0) {
+            $response['winner'] = $this->player->getName() . " [$optionHumanText] wins!";
             $this->player->win();
             $this->computer->defeat();
-        } elseif ($win%2 !== 0) {
-            $this->printRoundWinner($menu, $this->computer->getName() . " [$optionComputerText] wins!!", 'yellow');
+        } elseif ($result%2 !== 0) {
+            $response['winner'] = $this->computer->getName() . " [$optionHumanText] wins!";
             $this->player->defeat();
             $this->computer->win();
         }
-        $this->actual_rounds++;
-        $this->thereIsAWinner($menu);
+        $this->sumRounds();
+        return $response;
     }
 
-    /**
-     * This method is called to print a text like an alert with
-     * the options selected and the winner
-     *
-     * @param CliMenu $menu
-     * @param string $text
-     * @param string $bg
-     */
-    protected function printRoundWinner(CliMenu $menu, string $text, string $bg='default') {
-        $flash = $menu->flash($text);
-        $flash->getStyle()->setBg($bg);
-        $flash->display();
+    public function sumRounds(){
+        $this->actual_rounds++;
     }
 
     /**
      * Method that generate an ASCII from the data of the
      * two players (Player and Computer)
      *
-     * @return string
+     * @return array
      */
-    protected function getScoreBoard(): string
+    public function getScoreBoard(): array
     {
-        $data = [
-            $this->player->getAscii(),
-            $this->computer->getAscii(),
+        return [
+            'headers' => ['Player', 'Victory', 'Draw', 'Defeat'],
+            'values' => [
+                $this->player->getAscii(),
+                $this->computer->getAscii(),
+            ]
         ];
-        $renderer = new ArrayToTextTable($data);
-        return $renderer->getTable();
     }
 
     /**
-     * Method executed at the end of a round to validate if
-     * there is a winner or if rounds are over
+     * Method to validate if there is a winner
      *
-     * @param CliMenu $menu
-     * @return void
-     * @throws InvalidTerminalException
+     * @return bool
      */
-    protected function thereIsAWinner(CliMenu $menu) {
+    public function thereIsAWinner(): bool
+    {
         if ($this->player->stats()->getVictories() === $this->min_victories) {
-            $menu->close();
-            $this->showScoreBoard();
+            return true;
         }
         if ($this->computer->stats()->getVictories() === $this->min_victories) {
-            $menu->close();
-            $this->showScoreBoard();
+            return true;
         }
         if ($this->actual_rounds === $this->max_rounds) {
-            $menu->close();
-            $this->showScoreBoard();
+            return true;
         }
-    }
-
-    /**
-     * Method that print in console and ASCII table with the data
-     * of the players
-     * @return void
-     * @throws InvalidTerminalException
-     */
-    protected function showScoreBoard() {
-        (new CliMenuBuilder)
-            ->setTitle('Rock, Paper, Scissors, Lizard, Spock Game > Winner')
-            ->addAsciiArt($this->getScoreBoard(),'center')
-            ->addLineBreak('-')
-            ->setBorder(1, 2, 'yellow')
-            ->setPadding(2, 4)
-            ->setMarginAuto()
-            ->build()
-        ->open();
+        return false;
     }
 }

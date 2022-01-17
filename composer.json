@@ -16,8 +16,6 @@
     ],
     "require": {
         "php" : ">=7.4 | 8.*",
-        "php-school/cli-menu": "^4.3",
-        "mathieuviossat/arraytotexttable": "^1.0",
         "symfony/console": "^6.0"
     },
     "require-dev": {

@@ -64,8 +64,8 @@ class Game
     }
 
     /**
-     * Method that generate an ASCII from the data of the
-     * two players (Player and Computer)
+     * Method that prepare the data of the
+     * two players (Player and Computer) to show the score
      *
      * @return array
      */

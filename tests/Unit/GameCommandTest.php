@@ -10,18 +10,11 @@ class GameCommandTest extends TestCase
 {
     public Application $application;
 
-    protected function setUp(): void
-    {
-        $application = new Application();
-        $application->add(new GameCommand());
-        $this->application = $application;
-    }
-
     /**
      * @test
      */
-    public function it_should_run(){
-
+    public function it_should_run()
+    {
         $command = $this->application->find('game');
         $commandTester = new CommandTester($command);
 
@@ -39,7 +32,8 @@ class GameCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_should_only_receive_valid_input(){
+    public function it_should_only_receive_valid_input()
+    {
         $this->expectException(MissingInputException::class);
 
         $command = $this->application->find('game');
@@ -52,6 +46,13 @@ class GameCommandTest extends TestCase
             '--max-rounds' => 1,
             '--min-victories' => 1
         ]);
+    }
+
+    protected function setUp(): void
+    {
+        $application = new Application();
+        $application->add(new GameCommand());
+        $this->application = $application;
     }
 
 }

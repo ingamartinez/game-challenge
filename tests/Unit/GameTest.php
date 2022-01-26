@@ -8,41 +8,48 @@ class GameTest extends TestCase
     /**
      * @test
      */
-    public function it_min_victories_should_be_optionals(){
+    public function it_min_victories_should_be_optionals()
+    {
         $game = new Game('Alejandro');
-        $this->assertSame($game->getMinVictories(),3);
+        $this->assertSame($game->getMinVictories(), 3);
     }
 
-    public function it_should_set_min_victories(){
+    public function it_should_set_min_victories()
+    {
         $game2 = new Game('Alejandro', 10);
-        $this->assertSame($game2->getMinVictories(),10);
+        $this->assertSame($game2->getMinVictories(), 10);
 
         $game2 = new Game('Alejandro', 10);
-        $this->assertSame($game2->getMinVictories(),10);
+        $this->assertSame($game2->getMinVictories(), 10);
     }
 
     /**
      * @test
      */
-    public function it_max_rounds_should_be_optionals(){
-        $game = new Game('Alejandro',10);
-        $this->assertSame($game->getMaxRounds(),5);
+    public function it_max_rounds_should_be_optionals()
+    {
+        $game = new Game('Alejandro', 10);
+        $this->assertSame($game->getMaxRounds(), 5);
     }
+
     /**
      * @test
      */
-    public function it_should_set_max_rounds(){
+    public function it_should_set_max_rounds()
+    {
         $game2 = new Game('Alejandro', 10, 20);
-        $this->assertSame($game2->getMaxRounds(),20);
+        $this->assertSame($game2->getMaxRounds(), 20);
 
         $game2 = new Game('Alejandro', 10, 10);
-        $this->assertSame($game2->getMaxRounds(),10);
+        $this->assertSame($game2->getMaxRounds(), 10);
     }
+
     /**
      * @test
      * @dataProvider dataPlayer
      */
-    public function it_player_should_win($weapon, $computerWeapon) {
+    public function it_player_should_win($weapon, $computerWeapon)
+    {
         $game = new Game('Alejandro');
 
         $result = $game->calculateWinner($weapon, $computerWeapon);
@@ -54,7 +61,8 @@ class GameTest extends TestCase
      * @test
      * @dataProvider dataComputer
      */
-    public function it_computer_should_win($weapon, $computerWeapon) {
+    public function it_computer_should_win($weapon, $computerWeapon)
+    {
         $game = new Game('Alejandro');
 
         $result = $game->calculateWinner($weapon, $computerWeapon);
@@ -66,7 +74,8 @@ class GameTest extends TestCase
      * @test
      * @dataProvider dataDraw
      */
-    public function it_should_draw($weapon, $computerWeapon) {
+    public function it_should_draw($weapon, $computerWeapon)
+    {
         $game = new Game('Alejandro');
 
         $result = $game->calculateWinner($weapon, $computerWeapon);
@@ -77,14 +86,15 @@ class GameTest extends TestCase
     /**
      * @test
      */
-    public function it_should_get_stats() {
-        $game = new Game('Alejandro',5,5);
+    public function it_should_get_stats()
+    {
+        $game = new Game('Alejandro', 5, 5);
 
-        $game->calculateWinner('Scissors','Paper');
-        $game->calculateWinner('Scissors','Lizard');
-        $game->calculateWinner('Rock','Paper');
-        $game->calculateWinner('Rock','Spock');
-        $game->calculateWinner('Paper','Paper');
+        $game->calculateWinner('Scissors', 'Paper');
+        $game->calculateWinner('Scissors', 'Lizard');
+        $game->calculateWinner('Rock', 'Paper');
+        $game->calculateWinner('Rock', 'Spock');
+        $game->calculateWinner('Paper', 'Paper');
 
         $scoreBoard = $game->getScoreBoard();
 
@@ -112,27 +122,28 @@ class GameTest extends TestCase
     /**
      * @test
      */
-    public function it_should_return_winner_or_end_of_rounds() {
+    public function it_should_return_winner_or_end_of_rounds()
+    {
         //Win Player
-        $game = new Game('Alejandro',2,2);
-        $game->calculateWinner('Scissors','Paper');
-        $game->calculateWinner('Scissors','Lizard');
+        $game = new Game('Alejandro', 2, 2);
+        $game->calculateWinner('Scissors', 'Paper');
+        $game->calculateWinner('Scissors', 'Lizard');
 
         $result = $game->thereIsAWinner();
         $this->assertSame(true, $result);
 
         //Win Computer
-        $game = new Game('Alejandro',2,2);
-        $game->calculateWinner('Rock','Paper');
-        $game->calculateWinner('Rock','Spock');
+        $game = new Game('Alejandro', 2, 2);
+        $game->calculateWinner('Rock', 'Paper');
+        $game->calculateWinner('Rock', 'Spock');
 
         $result = $game->thereIsAWinner();
         $this->assertSame(true, $result);
 
         //Draw
-        $game = new Game('Alejandro',2,2);
-        $game->calculateWinner('Rock','Rock');
-        $game->calculateWinner('Spock','Spock');
+        $game = new Game('Alejandro', 2, 2);
+        $game->calculateWinner('Rock', 'Rock');
+        $game->calculateWinner('Spock', 'Spock');
 
         $result = $game->thereIsAWinner();
         $this->assertSame(true, $result);

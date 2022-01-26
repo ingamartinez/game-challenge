@@ -32,8 +32,8 @@ class GameCommand extends Command
         $this->setName('game')
             ->setDescription('New game: you vs computer')
             ->addArgument('name', InputArgument::OPTIONAL, 'What is your name?', 'Player 1')
-            ->addOption("min-victories", null ,InputOption::VALUE_OPTIONAL, 'Minimum rounds to win', 3)
-            ->addOption('max-rounds', null ,InputOption::VALUE_OPTIONAL, 'Maximum rounds', 5);
+            ->addOption("min-victories", null, InputOption::VALUE_OPTIONAL, 'Minimum rounds to win', 3)
+            ->addOption('max-rounds', null, InputOption::VALUE_OPTIONAL, 'Maximum rounds', 5);
     }
 
     /**
@@ -56,7 +56,8 @@ class GameCommand extends Command
         return Command::SUCCESS;
     }
 
-    public function start() {
+    public function start()
+    {
         $this->output->writeln([
             'Rock Paper Scissors Lizard Spock - Game',
         ]);
@@ -77,7 +78,8 @@ class GameCommand extends Command
         $this->printScoreBoard($this->game->getScoreBoard());
     }
 
-    public function printWinners(array $response) {
+    public function printWinners(array $response)
+    {
         foreach ($response as $print) {
             $this->output->writeln([
                 $print,
@@ -85,12 +87,12 @@ class GameCommand extends Command
         }
     }
 
-    public function printScoreBoard($scoreBoard) {
+    public function printScoreBoard($scoreBoard)
+    {
         $table = new Table($this->output);
         $table
             ->setHeaders($scoreBoard['headers'])
-            ->setRows($scoreBoard['values'])
-        ;
+            ->setRows($scoreBoard['values']);
         $table->render();
     }
 }

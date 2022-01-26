@@ -1,4 +1,5 @@
 <?php
+
 namespace Uniqoders\Game\Console\Models;
 
 class Stats
@@ -7,7 +8,8 @@ class Stats
     public int $victory;
     public int $defeat;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->draw = 0;
         $this->victory = 0;
         $this->defeat = 0;
@@ -28,15 +30,18 @@ class Stats
         return $this->draw;
     }
 
-    public function win() {
+    public function win()
+    {
         $this->victory++;
     }
 
-    public function defeat() {
+    public function defeat()
+    {
         $this->defeat++;
     }
 
-    public function draw () {
+    public function draw()
+    {
         $this->draw++;
     }
 

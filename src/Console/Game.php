@@ -13,7 +13,8 @@ class Game
     protected int $actual_rounds;
     protected int $min_victories;
 
-    public function __construct(string $player_name, int $min_victories = 3,  int $max_rounds = 5) {
+    public function __construct(string $player_name, int $min_victories = 3, int $max_rounds = 5)
+    {
         $this->player = new Player($player_name);
         $this->computer = new Player('Computer');
         $this->max_rounds = $max_rounds;
@@ -29,7 +30,8 @@ class Game
      * @param string|null $computerWeapon
      * @return string[]
      */
-    public function calculateWinner(string $weapon, string $computerWeapon=null): array{
+    public function calculateWinner(string $weapon, string $computerWeapon = null): array
+    {
         $optionHumanText = $weapon;
         $optionHumanValue = $this->options[$optionHumanText];
 
@@ -46,11 +48,11 @@ class Game
             $response['winner'] = "Draw!";
             $this->player->draw();
             $this->computer->draw();
-        }elseif ($result%2 === 0) {
+        } elseif ($result % 2 === 0) {
             $response['winner'] = $this->player->getName() . " [$optionHumanText] wins!";
             $this->player->win();
             $this->computer->defeat();
-        } elseif ($result%2 !== 0) {
+        } elseif ($result % 2 !== 0) {
             $response['winner'] = $this->computer->getName() . " [$optionComputerText] wins!";
             $this->player->defeat();
             $this->computer->win();
@@ -59,7 +61,8 @@ class Game
         return $response;
     }
 
-    public function sumRounds(){
+    public function sumRounds()
+    {
         $this->actual_rounds++;
     }
 

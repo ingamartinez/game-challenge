@@ -59,7 +59,7 @@ class GameTest extends TestCase
 
         $result = $game->calculateWinner($weapon, $computerWeapon);
 
-        $this->assertEquals("Computer [$weapon] wins!", $result['winner']);
+        $this->assertEquals("Computer [$computerWeapon] wins!", $result['winner']);
     }
 
     /**

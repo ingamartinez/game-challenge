@@ -2,7 +2,6 @@
 
 namespace Uniqoders\Game\Console;
 
-use PhpSchool\CliMenu\Exception\InvalidTerminalException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;

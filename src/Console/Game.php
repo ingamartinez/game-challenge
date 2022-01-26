@@ -51,7 +51,7 @@ class Game
             $this->player->win();
             $this->computer->defeat();
         } elseif ($result%2 !== 0) {
-            $response['winner'] = $this->computer->getName() . " [$optionHumanText] wins!";
+            $response['winner'] = $this->computer->getName() . " [$optionComputerText] wins!";
             $this->player->defeat();
             $this->computer->win();
         }

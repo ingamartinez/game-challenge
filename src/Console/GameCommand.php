@@ -43,9 +43,21 @@ class GameCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        try {
+            $this->isValidInputs(
+                $input->getArgument('name'),
+                $input->getOption('min-victories'),
+                $input->getOption('max-rounds')
+            );
+        } catch (\Exception $exception) {
+            $output->writeln("<error>{$exception->getMessage()}</error>");
+            return Command::FAILURE;
+        }
+
         $this->game = new Game(
             $input->getArgument('name'),
             $input->getOption('min-victories'),
@@ -57,6 +69,26 @@ class GameCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function isValidInputs($name, $minVictories, $maxRounds): bool
+    {
+        if (gettype($name) != 'string') {
+            throw new \Exception('The parameter [name] should be a text');
+        }
+
+        if (!is_numeric($minVictories)) {
+            throw new \Exception('The parameter [min-victories] should be a number');
+        };
+
+        if (!is_numeric($maxRounds)) {
+            throw new \Exception('The parameter [max-rounds] should be a number');
+        }
+
+        return true;
+    }
+
     public function start()
     {
         $this->output->writeln([
@@ -66,7 +98,7 @@ class GameCommand extends Command
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
             'Please select a weapon',
-            Weapon::availableWeapons()
+            Weapon::availableWeapons()->toArray()
         );
         $question->setErrorMessage('Weapon %s is not valid.');
 

@@ -2,34 +2,64 @@
 
 namespace Uniqoders\Game\Console\Models;
 
+use Tightenco\Collect\Support\Collection;
+
+/**
+ *
+ */
 class Weapon
 {
+    /**
+     * @param string $name
+     * @param int $damage
+     */
     public function __construct(protected string $name, protected int $damage)
     {
     }
 
-    public static function availableWeapons(): array
+    /**
+     * @param Collection $weapons
+     * @return Collection
+     */
+    public static function create(Collection $weapons): Collection
     {
-        return ["Scissors", "Paper", "Rock", "Lizard", "Spock"];
-    }
+        $availableWeapons = Weapon::availableWeapons();
 
-    public static function createFromArray(array $weapons): array
-    {
-        return array_map(function ($key, $weapon) {
+        return $weapons->map(function ($weapon, $key) use ($availableWeapons) {
+            if (!$availableWeapons->contains($weapon)) {
+                throw new \Exception("Weapon doesn't exists");
+            }
             return new Weapon($weapon, $key);
-        }, array_keys($weapons), $weapons);
+        });
     }
 
+    /**
+     * @return Collection
+     */
+    public static function availableWeapons(): Collection
+    {
+        return collect(["Scissors", "Paper", "Rock", "Lizard", "Spock"]);
+    }
+
+    /**
+     * @return int
+     */
     public function getDamage(): int
     {
         return $this->damage;
     }
 
+    /**
+     * @return string
+     */
     public function __toString(): string
     {
         return $this->getName();
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;

@@ -2,18 +2,45 @@
 
 namespace Uniqoders\Game\Console;
 
+use Tightenco\Collect\Support\Collection;
 use Uniqoders\Game\Console\Models\Player;
 use Uniqoders\Game\Console\Models\Weapon;
 
+/**
+ *
+ */
 class Game
 {
+    /**
+     * @var Player
+     */
     protected Player $player;
+    /**
+     * @var Player
+     */
     protected Player $computer;
-    protected array $weapons;
+    /**
+     * @var Collection
+     */
+    protected Collection $weapons;
+    /**
+     * @var int
+     */
     protected int $max_rounds;
+    /**
+     * @var int
+     */
     protected int $actual_rounds;
+    /**
+     * @var int
+     */
     protected int $min_victories;
 
+    /**
+     * @param string $player_name
+     * @param int $min_victories
+     * @param int $max_rounds
+     */
     public function __construct(string $player_name, int $min_victories = 3, int $max_rounds = 5)
     {
         $this->player = new Player($player_name);
@@ -21,7 +48,7 @@ class Game
         $this->max_rounds = $max_rounds;
         $this->min_victories = $min_victories;
         $this->actual_rounds = 0;
-        $this->weapons = Weapon::createFromArray(Weapon::availableWeapons());
+        $this->weapons = Weapon::create(Weapon::availableWeapons());
     }
 
     /**
@@ -34,53 +61,76 @@ class Game
      */
     public function calculateWinner(string $firstWeapon, string $secondWeapon = null): array
     {
-        $humanWeapon = $this->getWeaponByText($firstWeapon);
-        $computerWeapon = $secondWeapon ? $this->getWeaponByText($secondWeapon) : $this->getRandomWeapon();
+        $this->player->setWeapon($this->getWeaponByText($firstWeapon));
+        $this->computer->setWeapon($secondWeapon ? $this->getWeaponByText($secondWeapon) : $this->getRandomWeapon());
 
-        $result = ($humanWeapon->getDamage() - $computerWeapon->getDamage() + count($this->weapons)) % count($this->weapons);
+        $result = $this->player->fight($this->computer);
 
-        $response = [
-            'human_choice' => "You have just selected: [$humanWeapon]",
-            'computer_choice' => "Computer has just selected: [$computerWeapon]"
-        ];
-
-        if ($result === 0) {
-            $response['winner'] = "Draw!";
-            $this->player->draw();
-            $this->computer->draw();
-        } elseif ($result % 2 === 0) {
-            $response['winner'] = $this->player->getName() . " [$humanWeapon] wins!";
-            $this->player->win();
-            $this->computer->defeat();
-        } elseif ($result % 2 !== 0) {
-            $response['winner'] = $this->computer->getName() . " [$computerWeapon] wins!";
-            $this->player->defeat();
-            $this->computer->win();
-        }
         $this->sumRounds();
-        return $response;
+
+        return [
+            'human_choice' => "You have just selected [{$this->player->getWeapon()}]",
+            'computer_choice' => "Computer has just selected [{$this->computer->getWeapon()}]",
+            'winner' => $this->rules($result)
+        ];
     }
 
+    /**
+     * Find a weapon by his name
+     *
+     * @param string $weaponText
+     * @return Weapon
+     */
     public function getWeaponByText(string $weaponText): Weapon
     {
-        $weapon = array_filter(
-            $this->weapons,
-            function (Weapon $filterWeapon) use ($weaponText) {
-                return $filterWeapon->getName() === $weaponText;
-            }
-        );
-        return array_pop($weapon);
+        return $this->weapons->filter(function (Weapon $weapon) use ($weaponText) {
+            return $weapon->getName() === $weaponText;
+        })->first();
     }
 
+    /**
+     * Return a random weapon from the list
+     *
+     * @return Weapon
+     */
     public function getRandomWeapon(): Weapon
     {
-        $randomWeapon = (array_rand($this->weapons));
-        return $this->weapons[$randomWeapon];
+        return $this->weapons->random();
     }
 
+    /**
+     * Add +1 to the rounds
+     *
+     * @return void
+     */
     public function sumRounds()
     {
         $this->actual_rounds++;
+    }
+
+    /**
+     * Rules for determinate the winner
+     *
+     * @param int $result
+     * @return string
+     */
+    public function rules(int $result): string
+    {
+        if ($result === 0) {
+            $this->player->draw();
+            $this->computer->draw();
+            return "Draw!";
+        }
+
+        if ($result % 2 === 0) {
+            $this->player->win();
+            $this->computer->defeat();
+            return $this->player->getName() . " [{$this->player->getWeapon()}] wins!";
+        }
+
+        $this->player->defeat();
+        $this->computer->win();
+        return $this->computer->getName() . " [{$this->computer->getWeapon()}] wins!";
     }
 
     /**
@@ -136,11 +186,11 @@ class Game
     }
 
     /**
-     * @return array
+     * @return Collection
      */
-    public function getOptions(): array
+    public function getWeapons(): Collection
     {
-        return $this->options;
+        return $this->weapons;
     }
 
     /**

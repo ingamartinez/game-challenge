@@ -1,27 +1,28 @@
 {
-    "name": "ingamartinez/game-challenge",
-    "description": "Challenge Game for interview",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "Uniqoders\\Game\\": "./src",
-            "Uniqoders\\Tests\\": "./tests"
-        }
-    },
-    "authors": [
-        {
-            "name": "Alejandro Martinez",
-            "email": "ing.amartinez94@gmail.com"
-        }
-    ],
-    "require": {
-        "php" : ">=7.4 | 8.*",
-        "symfony/console": "^6.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.5"
-    },
-    "config": {
-        "optimize-autoloader": true
+  "name": "ingamartinez/game-challenge",
+  "description": "Challenge Game for interview",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Uniqoders\\Game\\": "./src",
+      "Uniqoders\\Tests\\": "./tests"
     }
+  },
+  "authors": [
+    {
+      "name": "Alejandro Martinez",
+      "email": "ing.amartinez94@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4 | ^8.0",
+    "symfony/console": "^6.0",
+    "tightenco/collect": "^8.81"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
 }

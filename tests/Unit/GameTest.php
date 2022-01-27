@@ -16,11 +16,11 @@ class GameTest extends TestCase
 
     public function it_should_set_min_victories()
     {
-        $game2 = new Game('Alejandro', 10);
-        $this->assertSame($game2->getMinVictories(), 10);
+        $game1 = new Game('Alejandro', 10);
+        $this->assertSame($game1->getMinVictories(), 10);
 
-        $game2 = new Game('Alejandro', 10);
-        $this->assertSame($game2->getMinVictories(), 10);
+        $game2 = new Game('Alejandro', 20);
+        $this->assertSame($game2->getMinVictories(), 20);
     }
 
     /**

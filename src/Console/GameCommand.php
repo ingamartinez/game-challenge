@@ -74,7 +74,7 @@ class GameCommand extends Command
      */
     public function isValidInputs($name, $minVictories, $maxRounds): bool
     {
-        if (gettype($name) != 'string') {
+        if (!is_string($name)) {
             throw new \Exception('The parameter [name] should be a text');
         }
 

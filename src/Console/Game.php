@@ -3,12 +3,13 @@
 namespace Uniqoders\Game\Console;
 
 use Uniqoders\Game\Console\Models\Player;
+use Uniqoders\Game\Console\Models\Weapon;
 
 class Game
 {
     protected Player $player;
     protected Player $computer;
-    protected array $options = ["Scissors" => 0, "Paper" => 1, "Rock" => 2, "Lizard" => 3, "Spock" => 4];
+    protected array $weapons;
     protected int $max_rounds;
     protected int $actual_rounds;
     protected int $min_victories;
@@ -20,28 +21,27 @@ class Game
         $this->max_rounds = $max_rounds;
         $this->min_victories = $min_victories;
         $this->actual_rounds = 0;
+        $this->weapons = Weapon::createFromArray(Weapon::availableWeapons());
     }
 
     /**
      * Method called each time a player select an option from the menu
      * It calculates the winner of the round
      *
-     * @param string $weapon
-     * @param string|null $computerWeapon
+     * @param string $firstWeapon
+     * @param string|null $secondWeapon
      * @return string[]
      */
-    public function calculateWinner(string $weapon, string $computerWeapon = null): array
+    public function calculateWinner(string $firstWeapon, string $secondWeapon = null): array
     {
-        $optionHumanText = $weapon;
-        $optionHumanValue = $this->options[$optionHumanText];
+        $humanWeapon = $this->getWeaponByText($firstWeapon);
+        $computerWeapon = $secondWeapon ? $this->getWeaponByText($secondWeapon) : $this->getRandomWeapon();
 
-        $optionComputerText = $computerWeapon ?? array_rand($this->options);
-        $optionComputerValue = $this->options[$optionComputerText];
-        $result = ($optionHumanValue - $optionComputerValue + count($this->options)) % count($this->options);
+        $result = ($humanWeapon->getDamage() - $computerWeapon->getDamage() + count($this->weapons)) % count($this->weapons);
 
         $response = [
-            'human_choice' => "You have just selected: [$optionHumanText]",
-            'computer_choice' => "Computer has just selected: [$optionComputerText]"
+            'human_choice' => "You have just selected: [$humanWeapon]",
+            'computer_choice' => "Computer has just selected: [$computerWeapon]"
         ];
 
         if ($result === 0) {
@@ -49,16 +49,33 @@ class Game
             $this->player->draw();
             $this->computer->draw();
         } elseif ($result % 2 === 0) {
-            $response['winner'] = $this->player->getName() . " [$optionHumanText] wins!";
+            $response['winner'] = $this->player->getName() . " [$humanWeapon] wins!";
             $this->player->win();
             $this->computer->defeat();
         } elseif ($result % 2 !== 0) {
-            $response['winner'] = $this->computer->getName() . " [$optionComputerText] wins!";
+            $response['winner'] = $this->computer->getName() . " [$computerWeapon] wins!";
             $this->player->defeat();
             $this->computer->win();
         }
         $this->sumRounds();
         return $response;
+    }
+
+    public function getWeaponByText(string $weaponText): Weapon
+    {
+        $weapon = array_filter(
+            $this->weapons,
+            function (Weapon $filterWeapon) use ($weaponText) {
+                return $filterWeapon->getName() === $weaponText;
+            }
+        );
+        return array_pop($weapon);
+    }
+
+    public function getRandomWeapon(): Weapon
+    {
+        $randomWeapon = (array_rand($this->weapons));
+        return $this->weapons[$randomWeapon];
     }
 
     public function sumRounds()
@@ -77,8 +94,8 @@ class Game
         return [
             'headers' => ['Player', 'Victory', 'Draw', 'Defeat'],
             'values' => [
-                $this->player->getAscii(),
-                $this->computer->getAscii(),
+                $this->player->toArray(),
+                $this->computer->toArray(),
             ]
         ];
     }

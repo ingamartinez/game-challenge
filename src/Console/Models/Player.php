@@ -2,7 +2,9 @@
 
 namespace Uniqoders\Game\Console\Models;
 
-class Player
+use Uniqoders\Game\Console\Interfaces\ToArrayInterface;
+
+class Player implements ToArrayInterface
 {
     protected string $name;
     protected Stats $stats;
@@ -33,7 +35,7 @@ class Player
         $this->stats->draw();
     }
 
-    public function getAscii(): array
+    public function toArray(): array
     {
         return [
             'Player' => $this->name,

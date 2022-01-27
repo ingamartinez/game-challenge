@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Uniqoders\Game\Console\Models\Weapon;
 
 class GameCommand extends Command
 {
@@ -65,7 +66,7 @@ class GameCommand extends Command
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
             'Please select a weapon',
-            ['Scissors', 'Paper', 'Rock', 'Lizard', 'Spock']
+            Weapon::availableWeapons()
         );
         $question->setErrorMessage('Weapon %s is not valid.');
 
